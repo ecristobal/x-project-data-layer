@@ -216,6 +216,7 @@
 				<version>3.5.1</version>
 				<configuration>
 					<compilerVersion>1.8</compilerVersion>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -247,7 +248,7 @@
 						</goals>
 						<phase>install</phase>
 						<configuration>
-							<keystore>/Users/esteban/claves</keystore>
+							<keystore>/Users/esteban/claves/keystore.jks</keystore>
 							<alias>ecrert</alias>
 							<storepass>Tamamico7251</storepass>
 							<keypass>Tamamico7251</keypass>
