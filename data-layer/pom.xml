@@ -5,6 +5,10 @@
 	<artifactId>data-layer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
+	
+	<modules>
+		<module>database</module>
+	</modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -13,7 +17,6 @@
 		<log4j.version>2.6.2</log4j.version>
 		<spring.version>4.3.3.RELEASE</spring.version>
 		<cxf.version>3.1.7</cxf.version>
-		<eclipselink.version>2.6.4</eclipselink.version>
 	</properties>
 
 	<repositories>
@@ -182,12 +185,6 @@
 				<groupId>org.apache.cxf</groupId>
 				<artifactId>cxf-rt-transports-http</artifactId>
 				<version>${cxf.version}</version>
-			</dependency>
-			<!-- EclipseLink dependencies -->
-			<dependency>
-				<groupId>org.eclipse.persistence</groupId>
-				<artifactId>org.eclipse.persistence.jpa</artifactId>
-				<version>${eclipselink.version}</version>
 			</dependency>
 			<!-- Provided dependencies -->
 			<dependency>
