@@ -248,7 +248,7 @@
 						</goals>
 						<phase>install</phase>
 						<configuration>
-							<keystore>/Users/esteban/claves/keystore.jks</keystore>
+							<keystore>/java-key/keystore.jks</keystore>
 							<alias>ecrert</alias>
 							<storepass>Tamamico7251</storepass>
 							<keypass>Tamamico7251</keypass>
