@@ -5,7 +5,7 @@
 	<artifactId>data-layer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	
+
 	<modules>
 		<module>database</module>
 	</modules>
@@ -18,6 +18,10 @@
 		<spring.version>4.3.3.RELEASE</spring.version>
 		<cxf.version>3.1.7</cxf.version>
 	</properties>
+
+	<scm>
+		<developerConnection>scm:git:https://github.com/ecristobal/x-project-data-layer.git</developerConnection>
+	</scm>
 
 	<repositories>
 		<repository>
@@ -248,7 +252,7 @@
 						</goals>
 						<phase>install</phase>
 						<configuration>
-							<keystore>/Users/esteban/claves/keystore.jks</keystore>
+							<keystore>/java-key/keystore.jks</keystore>
 							<alias>ecrert</alias>
 							<storepass>Tamamico7251</storepass>
 							<keypass>Tamamico7251</keypass>
@@ -256,16 +260,21 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>3.2.0</version>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5.3</version>
+			</plugin>
 		</plugins>
-		
+
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<groupId>org.apache.felix</groupId>
-					<artifactId>maven-bundle-plugin</artifactId>
-					<version>3.2.0</version>
-					<extensions>true</extensions>
-				</plugin>
 				<plugin>
 					<groupId>com.spotify</groupId>
 					<artifactId>docker-maven-plugin</artifactId>
@@ -274,5 +283,5 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	
+
 </project>
