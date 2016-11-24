@@ -211,6 +211,24 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	
+	<profiles>
+		<profile>
+			<id>jenkins</id>
+			<properties>
+				<java.key.file.path>/var/jenkins_home/keystore.jks</java.key.file.path>
+			</properties>
+		</profile>
+		<profile>
+			<id>local</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<java.key.file.path>/java-key/keystore.jks</java.key.file.path>
+			</properties>
+		</profile>
+	</profiles>
 
 	<build>
 		<plugins>
@@ -252,7 +270,7 @@
 						</goals>
 						<phase>install</phase>
 						<configuration>
-							<keystore>/java-key/keystore.jks</keystore>
+							<keystore>${java.key.file.path}</keystore>
 							<alias>ecrert</alias>
 							<storepass>Tamamico7251</storepass>
 							<keypass>Tamamico7251</keypass>
