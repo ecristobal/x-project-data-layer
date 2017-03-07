@@ -464,9 +464,9 @@
 					<artifactId>docker-maven-plugin</artifactId>
 					<version>0.4.13</version>
 					<configuration>
-						<imageName>http://52.57.20.226:8082/repository/own-images/${docker.image.prefix}/${project.artifactId}</imageName>
-                        <pushImage>true</pushImage>
-						<baseImage>http://52.57.20.226:8082/repository/proxy-central/openjdk:8u121</baseImage>
+						<imageName>52.57.20.226:8082/repository/docker-images/${docker.image.prefix}/${project.artifactId}</imageName>
+						<baseImage>52.57.20.226:8083/repository/docker-central/openjdk:8u121</baseImage>
+						<pushImage>true</pushImage>
 						<volumes>
 							<volume>/tmp</volume>
 						</volumes>
@@ -480,7 +480,9 @@
 						<runs>
 							<run>sh -c 'touch /${project.build.finalName}.jar'</run>
 						</runs>
-						<entryPoint>[ "sh", "-c", "java -Djava.security.egd=file:/dev/./urandom -jar /${project.build.finalName}.jar" ]</entryPoint>
+						<entryPoint>[ "sh", "-c", "java
+							-Djava.security.egd=file:/dev/./urandom -jar
+							/${project.build.finalName}.jar" ]</entryPoint>
 					</configuration>
 				</plugin>
 				<plugin>
