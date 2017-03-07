@@ -463,11 +463,38 @@
 					<groupId>com.spotify</groupId>
 					<artifactId>docker-maven-plugin</artifactId>
 					<version>0.4.13</version>
+					<configuration>
+						<imageName>http://52.57.20.226:8082/repository/own-images/${docker.image.prefix}/${project.artifactId}</imageName>
+                        <pushImage>true</pushImage>
+						<baseImage>http://52.57.20.226:8082/repository/proxy-central/openjdk:8u121</baseImage>
+						<volumes>
+							<volume>/tmp</volume>
+						</volumes>
+						<resources>
+							<resource>
+								<targetPath>/</targetPath>
+								<directory>${project.build.directory}</directory>
+								<include>${project.build.finalName}.jar</include>
+							</resource>
+						</resources>
+						<runs>
+							<run>sh -c 'touch /${project.build.finalName}.jar'</run>
+						</runs>
+						<entryPoint>[ "sh", "-c", "java -Djava.security.egd=file:/dev/./urandom -jar /${project.build.finalName}.jar" ]</entryPoint>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-maven-plugin</artifactId>
 					<version>${spring.boot.version}</version>
+					<executions>
+						<execution>
+							<phase>install</phase>
+							<goals>
+								<goal>repackage</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>
