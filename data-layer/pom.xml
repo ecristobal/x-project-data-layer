@@ -22,7 +22,7 @@
 		<eureka.version>1.2.5.RELEASE</eureka.version>
 		<docker.image.prefix>x-project-data-layer</docker.image.prefix>
 		<!-- SonarQube configuration properties -->
-		<sonar.jacoco.itReportPath>${project.basedir}/../target/jacoco-it.exec</sonar.jacoco.itReportPath>
+		<sonar.jacoco.reportPaths>${project.basedir}/../target/jacoco-it.exec</sonar.jacoco.reportPaths>
 	</properties>
 
 	<scm>
