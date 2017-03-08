@@ -464,8 +464,8 @@
 					<artifactId>docker-maven-plugin</artifactId>
 					<version>0.4.13</version>
 					<configuration>
-						<imageName>52.57.20.226:8082/repository/docker-images/${docker.image.prefix}/${project.artifactId}</imageName>
-						<baseImage>52.57.20.226:8083/repository/docker-central/openjdk:8u121</baseImage>
+						<imageName>52.57.20.226:8083/repository/docker-images/${docker.image.prefix}/${project.artifactId}</imageName>
+						<baseImage>openjdk:8u121</baseImage>
 						<pushImage>true</pushImage>
 						<volumes>
 							<volume>/tmp</volume>
