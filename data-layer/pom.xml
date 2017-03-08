@@ -21,8 +21,6 @@
         <hibernate.version>5.2.6.Final</hibernate.version>
         <eureka.version>1.2.5.RELEASE</eureka.version>
         <docker.image.prefix>data-layer</docker.image.prefix>
-        <!-- SonarQube configuration properties -->
-        <sonar.jacoco.reportPaths>${project.basedir}/../target/jacoco-it.exec</sonar.jacoco.reportPaths>
     </properties>
 
     <scm>
@@ -414,26 +412,29 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.7.8</version>
-                <configuration>
-                    <append>true</append>
-                </configuration>
                 <executions>
                     <execution>
-                        <id>agent-for-ut</id>
+                        <id>pre-unit-test</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>agent-for-it</id>
+                        <id>pre-integration-test</id>
                         <goals>
                             <goal>prepare-agent-integration</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>jacoco-site</id>
+                        <id>post-unit-test</id>
                         <goals>
                             <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>post-integration-test</id>
+                        <goals>
+                            <goal>report-integration</goal>
                         </goals>
                     </execution>
                 </executions>
