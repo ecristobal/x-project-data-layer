@@ -20,7 +20,7 @@
         <cxf.version>3.1.10</cxf.version>
         <hibernate.version>5.2.6.Final</hibernate.version>
         <eureka.version>1.2.5.RELEASE</eureka.version>
-        <docker.image.prefix>x-project-data-layer</docker.image.prefix>
+        <docker.image.prefix>data-layer</docker.image.prefix>
         <!-- SonarQube configuration properties -->
         <sonar.jacoco.reportPaths>${project.basedir}/../target/jacoco-it.exec</sonar.jacoco.reportPaths>
     </properties>
@@ -340,6 +340,12 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring.boot.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
                 <version>1.10.19</version>
@@ -462,8 +468,7 @@
                             </resource>
                         </resources>
                         <runs>
-                            <run>sh -c 'touch
-                                /${project.build.finalName}.jar'</run>
+                            <run>sh -c 'touch /${project.build.finalName}.jar'</run>
                         </runs>
                         <entryPoint>[ "sh", "-c", "java -Djava.security.egd=file:/dev/./urandom -jar /${project.build.finalName}.jar" ]</entryPoint>
                     </configuration>
@@ -477,6 +482,20 @@
                             <phase>install</phase>
                             <goals>
                                 <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>2.19.1</version>
+                    <executions>
+                        <execution>
+                            <id>verify</id>
+                            <goals>
+                                <goal>integration-test</goal>
+                                <goal>verify</goal>
                             </goals>
                         </execution>
                     </executions>
