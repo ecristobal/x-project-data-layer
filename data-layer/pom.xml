@@ -91,12 +91,6 @@
 
 	<dependencyManagement>
 		<dependencies>
-			<!-- Logging dependencies -->
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-api</artifactId>
-				<version>${log4j.version}</version>
-			</dependency>
 			<!-- Spring dependencies -->
 			<dependency>
 				<groupId>org.springframework</groupId>
@@ -332,6 +326,12 @@
 				<artifactId>jersey-servlet</artifactId>
 				<version>1.19.3</version>
 			</dependency>
+			<!-- Apache Kafka dependencies -->
+			<dependency>
+				<groupId>org.apache.kafka</groupId>
+				<artifactId>kafka-clients</artifactId>
+				<version>0.10.2.0</version>
+			</dependency>
 			<!-- Test dependencies -->
 			<dependency>
 				<groupId>org.springframework</groupId>
@@ -353,24 +353,6 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
-	<profiles>
-		<profile>
-			<id>jenkins</id>
-			<properties>
-				<java.key.file.path>/var/jenkins_home/keystore.jks</java.key.file.path>
-			</properties>
-		</profile>
-		<profile>
-			<id>local</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<java.key.file.path>/java-key/keystore.jks</java.key.file.path>
-			</properties>
-		</profile>
-	</profiles>
 
 	<build>
 		<plugins>
@@ -464,9 +446,11 @@
 					<artifactId>docker-maven-plugin</artifactId>
 					<version>0.4.13</version>
 					<configuration>
-						<imageName>52.57.20.226:8083/repository/docker-images/${docker.image.prefix}/${project.artifactId}</imageName>
+						<imageName>52.57.20.226:8083/${docker.image.prefix}-${project.artifactId}</imageName>
 						<baseImage>openjdk:8u121</baseImage>
 						<pushImage>true</pushImage>
+						<serverId>docker-images</serverId>
+						<registryUrl>52.57.20.226:8083</registryUrl>
 						<volumes>
 							<volume>/tmp</volume>
 						</volumes>
@@ -480,9 +464,7 @@
 						<runs>
 							<run>sh -c 'touch /${project.build.finalName}.jar'</run>
 						</runs>
-						<entryPoint>[ "sh", "-c", "java
-							-Djava.security.egd=file:/dev/./urandom -jar
-							/${project.build.finalName}.jar" ]</entryPoint>
+						<entryPoint>[ "sh", "-c", "java -Djava.security.egd=file:/dev/./urandom -jar /${project.build.finalName}.jar" ]</entryPoint>
 					</configuration>
 				</plugin>
 				<plugin>
