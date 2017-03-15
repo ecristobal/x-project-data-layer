@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+    <bean id="dataSource"
+        class="org.apache.commons.dbcp2.managed.BasicManagedDataSource">
+        <property name="xaDataSourceInstance">
+            <bean class="com.mysql.cj.jdbc.MysqlXADataSource">
+                <property name="url"
+                    value="jdbc:mysql://sonarqube-mysql.cbpq2cxhkzxc.eu-central-1.rds.amazonaws.com:3306/authentication" />
+                <property name="user" value="authenticator" />
+                <property name="password" value="authenticator" />
+            </bean>
+        </property>
+        <property name="transactionManager" ref="atomikosTransactionManager" />
+    </bean>
+
+    <bean id="transactionManager"
+        class="org.springframework.transaction.jta.JtaTransactionManager">
+        <property name="transactionManager" ref="atomikosTransactionManager" />
+        <property name="userTransaction" ref="atomikosUserTransaction" />
+    </bean>
+
+    <bean id="atomikosTransactionManager" class="com.atomikos.icatch.jta.UserTransactionManager"
+        init-method="init" destroy-method="close">
+        <property name="forceShutdown" value="false" />
+    </bean>
+
+    <bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp">
+        <property name="transactionTimeout" value="5" />
+    </bean>
+
+</beans>

@@ -203,6 +203,12 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <!-- Spring cloud dependencies -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-commons</artifactId>
+                <version>1.1.7.RELEASE</version>
+            </dependency>
             <!-- Eureka dependencies -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -247,12 +253,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-rs-security-oauth2</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-rs-security-sso-oidc</artifactId>
+                <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
                 <version>${cxf.version}</version>
             </dependency>
             <dependency>
@@ -462,7 +463,7 @@
                     <version>0.4.13</version>
                     <configuration>
                         <imageName>52.57.20.226:8083/${docker.image.prefix}-${project.artifactId}</imageName>
-                        <baseImage>52.57.20.226:8083/openjdk:8u121</baseImage>
+                        <baseImage>openjdk:8u121</baseImage>
                         <pushImage>true</pushImage>
                         <serverId>docker-images</serverId>
                         <registryUrl>52.57.20.226:8083</registryUrl>
@@ -508,6 +509,11 @@
                             </goals>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-codegen-plugin</artifactId>
+                    <version>${cxf.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
