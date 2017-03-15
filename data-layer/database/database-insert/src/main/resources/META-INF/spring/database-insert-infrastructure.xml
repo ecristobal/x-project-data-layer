@@ -4,15 +4,13 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
-    <tx:annotation-driven transaction-manager="transactionManager" />
-
     <bean id="entityManagerFactory"
         class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource">
             <bean
                 class="org.apache.commons.dbcp2.managed.BasicManagedDataSource">
                 <property name="xaDataSourceInstance" ref="dataSource" />
-                <property name="transactionManager" ref="atomikosTransactionManager" />
+                <property name="transactionManager" ref="transactionManager" />
             </bean>
         </property>
         <property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
@@ -23,23 +21,17 @@
         <property name="jpaProperties" ref="databaseProperties" />
     </bean>
 
-    <bean id="transactionManager"
-        class="org.springframework.transaction.jta.JtaTransactionManager">
-        <property name="transactionManager" ref="atomikosTransactionManager" />
-        <property name="userTransaction" ref="atomikosUserTransaction" />
-    </bean>
-
-    <bean id="atomikosTransactionManager" class="com.atomikos.icatch.jta.UserTransactionManager"
+    <bean id="transactionManager" class="com.atomikos.icatch.jta.UserTransactionManager"
         init-method="init" destroy-method="close">
         <property name="forceShutdown" value="false" />
     </bean>
 
-    <bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp">
+    <bean id="userTransaction" class="com.atomikos.icatch.jta.UserTransactionImp">
         <property name="transactionTimeout" value="5" />
     </bean>
 
     <bean id="connectionFactory" class="org.hornetq.jms.client.HornetQJMSConnectionFactory">
-        <constructor-arg name="ha" value="false"></constructor-arg>
+        <constructor-arg name="ha" value="false" />
         <constructor-arg name="initialConnectors">
             <bean class="org.hornetq.api.core.TransportConfiguration">
                 <constructor-arg

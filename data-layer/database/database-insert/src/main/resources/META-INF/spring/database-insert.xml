@@ -10,7 +10,8 @@
     <jaxws:endpoint id="jaxWs" implementor="#jaxWsService"
         address="jms:queue:XX?jndiTransactionManager=transactionManager">
         <jaxws:features>
-            <bean class="org.apache.cxf.transport.jms.ConnectionFactoryFeature">
+            <bean
+                class="org.apache.cxf.transport.jms.ConnectionFactoryFeature">
                 <constructor-arg ref="connectionFactory" />
             </bean>
         </jaxws:features>

@@ -2,7 +2,6 @@ package com.x.project.data.layer.database.insert.service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 
 /**
  * Implementation of {@link JaxWsService} interface
@@ -21,7 +20,6 @@ public class JaxWsServiceImpl implements JaxWsService {
      * com.x.project.data.layer.database.insert.service.JaxWsService#insertRow(
      * com.x.project.data.layer.database.insert.service.TableRow)
      */
-    @Transactional
     public boolean insertRow(TableRow row) {
         boolean isValid = false;
         final TableRowEntity entity = new TableRowEntity();
