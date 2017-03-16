@@ -12,7 +12,7 @@ import javax.jws.WebService;
 @WebService
 public interface JaxWsService {
 
-    @WebMethod
-    public boolean insertRow(final @WebParam TableRow row);
+	@WebMethod
+	public boolean insertRow(final @WebParam TableRow row);
 
 }
