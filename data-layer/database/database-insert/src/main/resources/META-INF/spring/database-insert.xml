@@ -7,8 +7,8 @@
     <bean id="jaxWsService"
         class="com.x.project.data.layer.database.insert.service.JaxWsServiceImpl" />
 
-    <jaxws:endpoint id="jaxWs" implementor="#jaxWsService"
-        address="jms:queue:XX?jndiTransactionManager=transactionManager">
+    <jaxws:endpoint id="jmsEndpoint" implementor="#jaxWsService"
+        address="jms:queue:test-queue?jndiTransactionManager=transactionManager">
         <jaxws:features>
             <bean
                 class="org.apache.cxf.transport.jms.ConnectionFactoryFeature">
@@ -17,5 +17,8 @@
         </jaxws:features>
     </jaxws:endpoint>
 
+    <jaxws:endpoint id="httpEndpoint" implementor="#jaxWsService"
+        address="/test">
+    </jaxws:endpoint>
 
 </beans>

@@ -6,13 +6,7 @@
 
     <bean id="entityManagerFactory"
         class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="dataSource">
-            <bean
-                class="org.apache.commons.dbcp2.managed.BasicManagedDataSource">
-                <property name="xaDataSourceInstance" ref="dataSource" />
-                <property name="transactionManager" ref="transactionManager" />
-            </bean>
-        </property>
+        <property name="dataSource" ref="dataSource" />
         <property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
         <property name="jpaDialect">
             <bean
@@ -30,20 +24,8 @@
         <property name="transactionTimeout" value="5" />
     </bean>
 
-    <bean id="connectionFactory" class="org.hornetq.jms.client.HornetQJMSConnectionFactory">
-        <constructor-arg name="ha" value="false" />
-        <constructor-arg name="initialConnectors">
-            <bean class="org.hornetq.api.core.TransportConfiguration">
-                <constructor-arg
-                    value="org.hornetq.core.remoting.impl.netty.NettyConnectorFactory" />
-                <constructor-arg>
-                    <map key-type="java.lang.String" value-type="java.lang.Object">
-                        <entry key="host" value="localhost" />
-                        <entry key="port" value="5445" />
-                    </map>
-                </constructor-arg>
-            </bean>
-        </constructor-arg>
+    <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://localhost:61616" />
     </bean>
 
 </beans>

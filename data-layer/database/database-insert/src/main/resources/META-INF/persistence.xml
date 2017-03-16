@@ -3,7 +3,7 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
     version="2.0">
 
-    <persistence-unit name="default" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="default" transaction-type="JTA">
         <class>com.x.project.data.layer.database.insert.service.TableRowEntity</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
     </persistence-unit>
