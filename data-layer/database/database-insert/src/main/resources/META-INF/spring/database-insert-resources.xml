@@ -19,6 +19,7 @@
 
     <util:properties id="databaseProperties">
         <prop key="hbm2ddl">validate</prop>
+        <prop key="hibernate.transaction.jta.platform">com.atomikos.icatch.jta.hibernate4.AtomikosPlatform</prop>
     </util:properties>
 
     <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">

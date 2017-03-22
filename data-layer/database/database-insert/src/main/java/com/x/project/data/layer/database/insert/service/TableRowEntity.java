@@ -16,10 +16,10 @@ public class TableRowEntity {
 
     @Id
     @Column(name = "NAME")
-    public String name;
+    private String name;
 
     @Column(name = "VALUE")
-    public String value;
+    private String value;
 
     /**
      * @return the name
