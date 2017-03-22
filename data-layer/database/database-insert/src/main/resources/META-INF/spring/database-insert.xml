@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
-	xsi:schemaLocation="http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+    xsi:schemaLocation="http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="jaxWsService"
-		class="com.x.project.data.layer.database.insert.service.JaxWsServiceImpl" />
+    <bean id="jaxWsService"
+        class="com.x.project.data.layer.database.insert.service.JaxWsServiceImpl" />
 
-	<jaxws:endpoint id="jmsEndpoint" implementor="#jaxWsService"
-		address="jms://">
-		<jaxws:features>
-			<bean class="org.apache.cxf.transport.jms.JMSConfigFeature">
-				<property name="jmsConfig">
-					<bean class="org.apache.cxf.transport.jms.JMSConfiguration">
-						<property name="connectionFactory" ref="connectionFactory" />
-						<property name="targetDestination" value="test-queue" />
-						<property name="sessionTransacted" value="true" />
-						<property name="transactionManager" ref="transactionManager" />
-					</bean>
-				</property>
-			</bean>
-		</jaxws:features>
-	</jaxws:endpoint>
+    <jaxws:endpoint id="jmsEndpoint" implementor="#jaxWsService"
+        address="jms://">
+        <jaxws:features>
+            <bean class="org.apache.cxf.transport.jms.JMSConfigFeature">
+                <property name="jmsConfig">
+                    <bean
+                        class="org.apache.cxf.transport.jms.JMSConfiguration">
+                        <property name="connectionFactory" ref="connectionFactory" />
+                        <property name="targetDestination" value="test-queue" />
+                        <property name="sessionTransacted" value="true" />
+                        <property name="transactionManager" ref="transactionManager" />
+                    </bean>
+                </property>
+            </bean>
+        </jaxws:features>
+    </jaxws:endpoint>
 
-	<jaxws:endpoint id="httpEndpoint" implementor="#jaxWsService"
-		address="/test">
-	</jaxws:endpoint>
+    <jaxws:endpoint id="httpEndpoint" implementor="#jaxWsService"
+        address="/test">
+    </jaxws:endpoint>
 
 </beans>
