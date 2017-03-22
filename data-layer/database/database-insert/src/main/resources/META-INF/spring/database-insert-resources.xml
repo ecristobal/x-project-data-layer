@@ -11,6 +11,16 @@
         <property name="password" value="tester" />
     </bean>
 
+    <bean id="connectionFactory"
+        class="org.apache.activemq.jms.pool.XaPooledConnectionFactory">
+        <property name="connectionFactory">
+            <bean class="org.apache.activemq.ActiveMQXAConnectionFactory">
+                <property name="brokerURL" value="tcp://localhost:61616" />
+            </bean>
+        </property>
+        <property name="transactionManager" ref="atomikosTransactionManager" />
+    </bean>
+
     <bean id="jpaVendorAdapter"
         class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
         <property name="database" value="MYSQL" />
@@ -18,12 +28,8 @@
 
     <util:properties id="databaseProperties">
         <prop key="hbm2ddl">validate</prop>
-        <prop key="hibernate.transaction.jta.platform">com.atomikos.icatch.jta.hibernate4.AtomikosPlatform
-        </prop>
+        <prop key="hibernate.current_session_context_class">jta</prop>
+        <prop key="hibernate.transaction.jta.platform">com.atomikos.icatch.jta.hibernate4.AtomikosJ2eePlatform</prop>
     </util:properties>
-
-    <bean id="connectionFactory" class="org.apache.activemq.ActiveMQXAConnectionFactory">
-        <property name="brokerURL" value="tcp://localhost:61616" />
-    </bean>
 
 </beans>

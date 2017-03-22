@@ -13,10 +13,7 @@
         </property>
         <property name="jpaProperties" ref="databaseProperties" />
     </bean>
-    
-    <bean id="transactionManager" class="com.atomikos.icatch.jta.UserTransactionManager"
-        init-method="init" destroy-method="close">
-        <property name="forceShutdown" value="false" />
-    </bean>
+
+    <bean id="atomikosTransactionManager" class="com.atomikos.icatch.jta.J2eeTransactionManager" />
 
 </beans>

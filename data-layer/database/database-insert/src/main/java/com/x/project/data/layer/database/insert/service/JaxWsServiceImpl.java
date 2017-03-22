@@ -2,6 +2,10 @@ package com.x.project.data.layer.database.insert.service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of {@link JaxWsService} interface
@@ -9,6 +13,8 @@ import javax.persistence.PersistenceContext;
  * @author Esteban Cristóbal
  */
 public class JaxWsServiceImpl implements JaxWsService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JaxWsServiceImpl.class);
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -20,7 +26,9 @@ public class JaxWsServiceImpl implements JaxWsService {
      * com.x.project.data.layer.database.insert.service.JaxWsService#insertRow(
      * com.x.project.data.layer.database.insert.service.TableRow)
      */
+    @Transactional
     public boolean insertRow(TableRow row) {
+        LOGGER.info("Entering SOAP endpoint");
         boolean isValid = false;
         final TableRowEntity entity = new TableRowEntity();
         entity.setName(row.getName());
@@ -29,7 +37,7 @@ public class JaxWsServiceImpl implements JaxWsService {
             this.entityManager.persist(entity);
             isValid = true;
         } catch (Exception e) {
-            // Nothing to do
+            LOGGER.error("Exception thrown:\n", e);
         }
         return isValid;
     }
