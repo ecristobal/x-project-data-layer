@@ -10,7 +10,6 @@ import org.apache.cxf.Bus;
 import org.apache.cxf.jaxws.EndpointImpl;
 import org.apache.cxf.transport.jms.JMSConfigFeature;
 import org.apache.cxf.transport.jms.JMSConfiguration;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -32,10 +31,9 @@ import com.x.project.data.layer.database.insert.service.JaxWsServiceImpl;
 public class DatabaseInsertBeanConfiguration {
 
     @Bean
-    public Endpoint endpoint(@Autowired final Bus bus, @Autowired final ConnectionFactory connectionFactory,
-            @Value("${jms.queue.name}") final String queueName, @Autowired final JaxWsService jaxWsService) {
+    public Endpoint endpoint(final Bus bus, final ConnectionFactory connectionFactory,
+            @Value("${jms.queue.name}") final String queueName, final JaxWsService jaxWsService) {
         final EndpointImpl endpoint = new EndpointImpl(bus, jaxWsService);
-        endpoint.publish("/Insert");
         final JMSConfiguration jmsConfiguration = new JMSConfiguration();
         jmsConfiguration.setConnectionFactory(connectionFactory);
         jmsConfiguration.setTargetDestination(queueName);
@@ -54,7 +52,7 @@ public class DatabaseInsertBeanConfiguration {
     }
 
     @Bean
-    public ConnectionFactory connectionFactory(@Autowired final TransactionManager transactionManager,
+    public ConnectionFactory connectionFactory(final TransactionManager transactionManager,
             @Value("${jms.connection.factory.url}") final String queueManagerUrl) {
         final XaPooledConnectionFactory connectionFactory = new XaPooledConnectionFactory();
         connectionFactory.setConnectionFactory(new ActiveMQXAConnectionFactory(queueManagerUrl));
