@@ -1,4 +1,4 @@
-package com.x.project.data.layer.database.insert;
+package com.x.project.data.layer.database.insert.spring;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,7 +10,6 @@ import org.springframework.context.annotation.ImportResource;
  * @author Esteban Cristóbal
  */
 @SpringBootApplication
-@ImportResource("classpath:/META-INF/spring/database-insert*.xml")
 public class DatabaseInsertApplication {
 
 	/**
