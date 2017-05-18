@@ -1,0 +1,28 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: database-insert
+  datasource:
+    password: authenticator
+    url: jdbc:mysql://sonarqube-mysql.cbpq2cxhkzxc.eu-central-1.rds.amazonaws.com:3306/test
+    username: authenticator
+    xa:
+      data-source-class-name: com.mysql.cj.jdbc.MysqlXADataSource
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        current_session_context_class: jta
+        dialect: org.hibernate.dialect.MySQL5Dialect
+        transaction:
+          jta:
+            platform: com.atomikos.icatch.jta.hibernate4.AtomikosJ2eePlatform
+# Custom properties
+jms:
+  connection:
+    factory:
+      url: tcp://localhost:61616
+  queue:
+    name: test-queue
