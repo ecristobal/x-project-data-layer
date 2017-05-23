@@ -30,6 +30,17 @@ import com.x.project.data.layer.database.insert.service.JaxWsServiceImpl;
 @EntityScan({ "com.x.project.data.layer.database.insert.service" })
 public class DatabaseInsertBeanConfiguration {
 
+    /**
+     * @param bus
+     *            CXF {@link Bus} instance
+     * @param connectionFactory
+     *            JMS {@link ConnectionFactory} instance
+     * @param queueName
+     *            JMS queue name to attach SOAP service
+     * @param jaxWsService
+     *            {@link JaxWsService} instance
+     * @return JAX-WS {@link Endpoint}
+     */
     @Bean
     public Endpoint endpoint(final Bus bus, final ConnectionFactory connectionFactory,
             @Value("${jms.queue.name}") final String queueName, final JaxWsService jaxWsService) {
