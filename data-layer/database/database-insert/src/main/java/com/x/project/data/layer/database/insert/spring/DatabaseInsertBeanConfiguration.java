@@ -1,22 +1,22 @@
 package com.x.project.data.layer.database.insert.spring;
 
 import javax.jms.ConnectionFactory;
+import javax.jms.XAConnectionFactory;
 import javax.transaction.TransactionManager;
 import javax.xml.ws.Endpoint;
 
 import org.apache.activemq.ActiveMQXAConnectionFactory;
-import org.apache.activemq.jms.pool.XaPooledConnectionFactory;
 import org.apache.cxf.Bus;
 import org.apache.cxf.jaxws.EndpointImpl;
 import org.apache.cxf.transport.jms.JMSConfigFeature;
 import org.apache.cxf.transport.jms.JMSConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.jta.atomikos.AtomikosXAConnectionFactoryWrapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.atomikos.icatch.jta.J2eeTransactionManager;
 import com.x.project.data.layer.database.insert.service.JaxWsService;
 import com.x.project.data.layer.database.insert.service.JaxWsServiceImpl;
 
@@ -41,15 +41,17 @@ public class DatabaseInsertBeanConfiguration {
      *            {@link JaxWsService} instance
      * @return JAX-WS {@link Endpoint}
      */
-    @Bean
+    @Bean(initMethod = "publish", destroyMethod = "stop")
     public Endpoint endpoint(final Bus bus, final ConnectionFactory connectionFactory,
-            @Value("${jms.queue.name}") final String queueName, final JaxWsService jaxWsService) {
+            @Value("${jms.queue.name}") final String queueName, final JaxWsService jaxWsService,
+            final TransactionManager transactionManager) {
         final EndpointImpl endpoint = new EndpointImpl(bus, jaxWsService);
         final JMSConfiguration jmsConfiguration = new JMSConfiguration();
         jmsConfiguration.setConnectionFactory(connectionFactory);
         jmsConfiguration.setTargetDestination(queueName);
         jmsConfiguration.setReceiveTimeout(10000L);
         jmsConfiguration.setSessionTransacted(true);
+        jmsConfiguration.setTransactionManager(transactionManager);
         final JMSConfigFeature jmsConfigFeature = new JMSConfigFeature();
         jmsConfigFeature.setJmsConfig(jmsConfiguration);
         endpoint.getFeatures().add(jmsConfigFeature);
@@ -63,17 +65,10 @@ public class DatabaseInsertBeanConfiguration {
     }
 
     @Bean
-    public ConnectionFactory connectionFactory(final TransactionManager transactionManager,
+    public ConnectionFactory connectionFactory(final AtomikosXAConnectionFactoryWrapper connectionFactoryWrapper,
             @Value("${jms.connection.factory.url}") final String queueManagerUrl) {
-        final XaPooledConnectionFactory connectionFactory = new XaPooledConnectionFactory();
-        connectionFactory.setConnectionFactory(new ActiveMQXAConnectionFactory(queueManagerUrl));
-        connectionFactory.setTransactionManager(transactionManager);
-        return connectionFactory;
-    }
-
-    @Bean
-    public TransactionManager transactionManager() {
-        return new J2eeTransactionManager();
+        final XAConnectionFactory connectionFactory = new ActiveMQXAConnectionFactory(queueManagerUrl);
+        return connectionFactoryWrapper.wrapConnectionFactory(connectionFactory);
     }
 
 }

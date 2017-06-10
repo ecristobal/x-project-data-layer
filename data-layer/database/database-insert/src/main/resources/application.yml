@@ -4,9 +4,9 @@ spring:
   application:
     name: database-insert
   datasource:
-    password: authenticator
+    password: tester
     url: jdbc:mysql://sonarqube-mysql.cbpq2cxhkzxc.eu-central-1.rds.amazonaws.com:3306/test
-    username: authenticator
+    username: tester
     xa:
       data-source-class-name: com.mysql.cj.jdbc.MysqlXADataSource
   jpa:
