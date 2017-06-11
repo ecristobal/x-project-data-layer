@@ -45,7 +45,8 @@ public class DatabaseInsertTestBeanConfiguration {
 
     @Bean
     public ConnectionFactory connectionFactory(final JtaTransactionManager jtaTransactionManager) {
-        final ConnectionFactory xaConnectionFactory = new ActiveMQXAConnectionFactory("tcp://localhost:61616");
+        final ActiveMQXAConnectionFactory xaConnectionFactory = new ActiveMQXAConnectionFactory();
+        xaConnectionFactory.setBrokerURL("tcp://localhost:61616");
         final JcaPooledConnectionFactory connectionFactory = new JcaPooledConnectionFactory();
         connectionFactory.setConnectionFactory(xaConnectionFactory);
         connectionFactory.setTransactionManager(jtaTransactionManager.getTransactionManager());

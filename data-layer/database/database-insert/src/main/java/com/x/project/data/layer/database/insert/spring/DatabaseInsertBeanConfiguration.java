@@ -1,6 +1,5 @@
 package com.x.project.data.layer.database.insert.spring;
 
-import javax.jms.XAConnectionFactory;
 import javax.transaction.TransactionManager;
 import javax.xml.ws.Endpoint;
 
@@ -56,7 +55,8 @@ public class DatabaseInsertBeanConfiguration {
     @Bean
     public JcaPooledConnectionFactory connectionFactory(
             @Value("${jms.connection.factory.url}") final String queueManagerUrl) {
-        final XAConnectionFactory xaConnectionFactory = new ActiveMQXAConnectionFactory(queueManagerUrl);
+        final ActiveMQXAConnectionFactory xaConnectionFactory = new ActiveMQXAConnectionFactory();
+        xaConnectionFactory.setBrokerURL(queueManagerUrl);
         final JcaPooledConnectionFactory connectionFactory = new JcaPooledConnectionFactory();
         connectionFactory.setConnectionFactory(xaConnectionFactory);
         return connectionFactory;
