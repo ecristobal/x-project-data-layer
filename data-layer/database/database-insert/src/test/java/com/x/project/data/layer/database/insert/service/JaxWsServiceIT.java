@@ -1,12 +1,11 @@
 package com.x.project.data.layer.database.insert.service;
 
-import javax.transaction.Transactional;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.x.project.data.layer.database.insert.spring.DatabaseInsertTestBeanConfiguration;
 
@@ -19,11 +18,20 @@ public class JaxWsServiceIT {
     private JaxWsService jaxWsService;
 
     @Test
-    public void testInsertRow() {
+    public void testInsertRowOk() {
         final TableRow row = new TableRow();
         row.setName("name");
         row.setValue("value");
         this.jaxWsService.insertRow(row);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testInsertRowRollback() {
+        final TableRow row = new TableRow();
+        row.setName("name2");
+        row.setValue("value2");
+        this.jaxWsService.insertRow(row);
+        throw new RuntimeException();
     }
 
 }

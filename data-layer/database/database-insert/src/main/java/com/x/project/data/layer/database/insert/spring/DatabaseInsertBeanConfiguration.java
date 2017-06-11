@@ -1,18 +1,17 @@
 package com.x.project.data.layer.database.insert.spring;
 
-import javax.jms.ConnectionFactory;
 import javax.jms.XAConnectionFactory;
 import javax.transaction.TransactionManager;
 import javax.xml.ws.Endpoint;
 
 import org.apache.activemq.ActiveMQXAConnectionFactory;
+import org.apache.activemq.jms.pool.JcaPooledConnectionFactory;
 import org.apache.cxf.Bus;
 import org.apache.cxf.jaxws.EndpointImpl;
 import org.apache.cxf.transport.jms.JMSConfigFeature;
 import org.apache.cxf.transport.jms.JMSConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.jta.atomikos.AtomikosXAConnectionFactoryWrapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -30,23 +29,13 @@ import com.x.project.data.layer.database.insert.service.JaxWsServiceImpl;
 @EntityScan({ "com.x.project.data.layer.database.insert.service" })
 public class DatabaseInsertBeanConfiguration {
 
-    /**
-     * @param bus
-     *            CXF {@link Bus} instance
-     * @param connectionFactory
-     *            JMS {@link ConnectionFactory} instance
-     * @param queueName
-     *            JMS queue name to attach SOAP service
-     * @param jaxWsService
-     *            {@link JaxWsService} instance
-     * @return JAX-WS {@link Endpoint}
-     */
     @Bean(initMethod = "publish", destroyMethod = "stop")
-    public Endpoint endpoint(final Bus bus, final ConnectionFactory connectionFactory,
+    public Endpoint endpoint(final Bus bus, final JcaPooledConnectionFactory connectionFactory,
             @Value("${jms.queue.name}") final String queueName, final JaxWsService jaxWsService,
             final TransactionManager transactionManager) {
         final EndpointImpl endpoint = new EndpointImpl(bus, jaxWsService);
         final JMSConfiguration jmsConfiguration = new JMSConfiguration();
+        connectionFactory.setTransactionManager(transactionManager);
         jmsConfiguration.setConnectionFactory(connectionFactory);
         jmsConfiguration.setTargetDestination(queueName);
         jmsConfiguration.setReceiveTimeout(10000L);
@@ -65,10 +54,12 @@ public class DatabaseInsertBeanConfiguration {
     }
 
     @Bean
-    public ConnectionFactory connectionFactory(final AtomikosXAConnectionFactoryWrapper connectionFactoryWrapper,
+    public JcaPooledConnectionFactory connectionFactory(
             @Value("${jms.connection.factory.url}") final String queueManagerUrl) {
-        final XAConnectionFactory connectionFactory = new ActiveMQXAConnectionFactory(queueManagerUrl);
-        return connectionFactoryWrapper.wrapConnectionFactory(connectionFactory);
+        final XAConnectionFactory xaConnectionFactory = new ActiveMQXAConnectionFactory(queueManagerUrl);
+        final JcaPooledConnectionFactory connectionFactory = new JcaPooledConnectionFactory();
+        connectionFactory.setConnectionFactory(xaConnectionFactory);
+        return connectionFactory;
     }
 
 }
