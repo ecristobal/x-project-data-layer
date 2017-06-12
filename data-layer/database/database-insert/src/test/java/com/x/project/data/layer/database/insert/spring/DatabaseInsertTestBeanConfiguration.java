@@ -1,13 +1,12 @@
 package com.x.project.data.layer.database.insert.spring;
 
 import javax.jms.ConnectionFactory;
+import javax.transaction.TransactionManager;
 
 import org.apache.activemq.ActiveMQXAConnectionFactory;
 import org.apache.activemq.jms.pool.JcaPooledConnectionFactory;
-import org.apache.cxf.binding.soap.SoapBindingConfiguration;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.apache.cxf.transport.jms.JMSConfigFeature;
-import org.apache.cxf.transport.jms.JMSConfiguration;
+import org.apache.cxf.transport.jms.ConnectionFactoryFeature;
 import org.apache.cxf.transport.jms.spec.JMSSpecConstants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,42 +22,40 @@ import com.x.project.data.layer.database.insert.service.JaxWsService;
 public class DatabaseInsertTestBeanConfiguration {
 
     @Bean
-    public JaxWsService jaxWsService(final ConnectionFactory connectionFactory,
-            final JtaTransactionManager jtaTransactionManager) {
+    public JaxWsService jaxWsService(final ConnectionFactory connectionFactory) {
         final JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
         factoryBean.setTransportId(JMSSpecConstants.SOAP_JMS_SPECIFICATION_TRANSPORTID);
-        factoryBean.setAddress("jms://");
+        factoryBean.setAddress("jms:queue:test-queue?jndiTransactionManager=atomikosTransactionManager");
         factoryBean.setServiceClass(JaxWsService.class);
-        final JMSConfiguration jmsConfiguration = new JMSConfiguration();
-        jmsConfiguration.setConnectionFactory(connectionFactory);
-        jmsConfiguration.setTargetDestination("test-queue");
-        jmsConfiguration.setReceiveTimeout(10000L);
-        jmsConfiguration.setSessionTransacted(true);
-        jmsConfiguration.setTransactionManager(jtaTransactionManager.getTransactionManager());
-        final JMSConfigFeature jmsConfigFeature = new JMSConfigFeature();
-        jmsConfigFeature.setJmsConfig(jmsConfiguration);
-        factoryBean.getFeatures().add(jmsConfigFeature);
-        SoapBindingConfiguration sbc = new SoapBindingConfiguration();
-        factoryBean.setBindingConfig(sbc);
+        factoryBean.getFeatures().add(new ConnectionFactoryFeature(connectionFactory));
         return (JaxWsService) factoryBean.create();
     }
 
     @Bean
-    public ConnectionFactory connectionFactory(final JtaTransactionManager jtaTransactionManager) {
+    public ConnectionFactory connectionFactory(final TransactionManager transactionManager) {
         final ActiveMQXAConnectionFactory xaConnectionFactory = new ActiveMQXAConnectionFactory();
         xaConnectionFactory.setBrokerURL("tcp://localhost:61616");
         final JcaPooledConnectionFactory connectionFactory = new JcaPooledConnectionFactory();
         connectionFactory.setConnectionFactory(xaConnectionFactory);
-        connectionFactory.setTransactionManager(jtaTransactionManager.getTransactionManager());
         return connectionFactory;
     }
 
     @Bean
-    public JtaTransactionManager transactionManager() {
-        final JtaTransactionManager jtaTransactionManager = new JtaTransactionManager();
-        jtaTransactionManager.setUserTransaction(new UserTransactionImp());
-        jtaTransactionManager.setTransactionManager(new UserTransactionManager());
-        return jtaTransactionManager;
+    public JtaTransactionManager transactionManager(UserTransactionImp userTransaction,
+            UserTransactionManager transactionManager) {
+        return new JtaTransactionManager(userTransaction, transactionManager);
+    }
+
+    @Bean
+    public UserTransactionImp userTransactionService() {
+        return new UserTransactionImp();
+    }
+
+    @Bean(initMethod = "init", destroyMethod = "close")
+    public UserTransactionManager atomikosTransactionManager() throws Exception {
+        final UserTransactionManager manager = new UserTransactionManager();
+        manager.setForceShutdown(false);
+        return manager;
     }
 
 }

@@ -7,8 +7,7 @@ import org.apache.activemq.ActiveMQXAConnectionFactory;
 import org.apache.activemq.jms.pool.JcaPooledConnectionFactory;
 import org.apache.cxf.Bus;
 import org.apache.cxf.jaxws.EndpointImpl;
-import org.apache.cxf.transport.jms.JMSConfigFeature;
-import org.apache.cxf.transport.jms.JMSConfiguration;
+import org.apache.cxf.transport.jms.ConnectionFactoryFeature;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -29,22 +28,14 @@ import com.x.project.data.layer.database.insert.service.JaxWsServiceImpl;
 public class DatabaseInsertBeanConfiguration {
 
     @Bean(initMethod = "publish", destroyMethod = "stop")
-    public Endpoint endpoint(final Bus bus, final JcaPooledConnectionFactory connectionFactory,
+    public EndpointImpl endpoint(final Bus bus, final JcaPooledConnectionFactory connectionFactory,
             @Value("${jms.queue.name}") final String queueName, final JaxWsService jaxWsService,
             final TransactionManager transactionManager) {
-        final EndpointImpl endpoint = new EndpointImpl(bus, jaxWsService);
-        final JMSConfiguration jmsConfiguration = new JMSConfiguration();
         connectionFactory.setTransactionManager(transactionManager);
-        jmsConfiguration.setConnectionFactory(connectionFactory);
-        jmsConfiguration.setTargetDestination(queueName);
-        jmsConfiguration.setReceiveTimeout(10000L);
-        jmsConfiguration.setSessionTransacted(true);
-        jmsConfiguration.setTransactionManager(transactionManager);
-        final JMSConfigFeature jmsConfigFeature = new JMSConfigFeature();
-        jmsConfigFeature.setJmsConfig(jmsConfiguration);
-        endpoint.getFeatures().add(jmsConfigFeature);
-        endpoint.setAddress("jms://");
-        return endpoint;
+        final EndpointImpl endpointImpl = (EndpointImpl) Endpoint.create(jaxWsService);
+        endpointImpl.getFeatures().add(new ConnectionFactoryFeature(connectionFactory));
+        endpointImpl.setAddress("jms:queue:test-queue?jndiTransactionManager=atomikosTransactionManager");
+        return endpointImpl;
     }
 
     @Bean
