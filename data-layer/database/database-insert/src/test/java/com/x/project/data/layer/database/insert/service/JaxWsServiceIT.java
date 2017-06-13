@@ -54,10 +54,10 @@ public class JaxWsServiceIT {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {
                 final TableRowEntity entity = entityManager.find(TableRowEntity.class, name);
-                entityManager.remove(entity);
                 Assert.assertNotNull(entity);
                 Assert.assertEquals(name, entity.getName());
                 Assert.assertEquals(value, entity.getValue());
+                entityManager.remove(entity);
             }
         });
     }
