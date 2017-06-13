@@ -1,5 +1,6 @@
 package com.x.project.data.layer.database.insert.service;
 
+import javax.jws.Oneway;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
@@ -12,7 +13,8 @@ import javax.jws.WebService;
 @WebService
 public interface JaxWsService {
 
-	@WebMethod
-	public boolean insertRow(final @WebParam TableRow row);
+    @WebMethod
+    @Oneway
+    public void insertRow(final @WebParam TableRow row);
 
 }

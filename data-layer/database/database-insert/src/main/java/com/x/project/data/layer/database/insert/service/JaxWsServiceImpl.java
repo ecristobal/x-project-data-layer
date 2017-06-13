@@ -5,6 +5,7 @@ import javax.persistence.PersistenceContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of {@link JaxWsService} interface
@@ -24,19 +25,17 @@ public class JaxWsServiceImpl implements JaxWsService {
      * com.x.project.data.layer.database.insert.service.JaxWsService#insertRow(
      * com.x.project.data.layer.database.insert.service.TableRow)
      */
-    public boolean insertRow(TableRow row) {
+    @Transactional
+    public void insertRow(TableRow row) {
         LOGGER.info("Entering SOAP endpoint");
-        boolean isValid = false;
         final TableRowEntity entity = new TableRowEntity();
         entity.setName(row.getName());
         entity.setValue(row.getValue());
         try {
             this.entityManager.persist(entity);
-            isValid = true;
         } catch (Exception e) {
             LOGGER.error("Exception thrown:\n", e);
         }
-        return isValid;
     }
 
 }
