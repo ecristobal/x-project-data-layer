@@ -1,8 +1,13 @@
 package com.x.project.data.layer.database.insert.service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.TransactionStatus;
@@ -22,6 +27,12 @@ public class JaxWsServiceIT {
     @Autowired
     private JtaTransactionManager transactionManager;
 
+    @Autowired
+    private JpaTransactionManager jpaTransactionManager;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Test
     public void testInsertRowOk() {
         final String name = "name";
@@ -35,6 +46,18 @@ public class JaxWsServiceIT {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {
                 jaxWsService.insertRow(row);
+            }
+        });
+        final TransactionTemplate jpaTransactionTemplate = new TransactionTemplate(this.jpaTransactionManager);
+        jpaTransactionTemplate.execute(new TransactionCallbackWithoutResult() {
+
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                final TableRowEntity entity = entityManager.find(TableRowEntity.class, name);
+                Assert.assertNotNull(entity);
+                Assert.assertEquals(name, entity.getName());
+                Assert.assertEquals(value, entity.getValue());
+                entityManager.remove(entity);
             }
         });
     }
@@ -59,6 +82,15 @@ public class JaxWsServiceIT {
         } catch (CustomRuntimeException e) {
             // Nothing to do
         }
+        final TransactionTemplate jpaTransactionTemplate = new TransactionTemplate(this.jpaTransactionManager);
+        jpaTransactionTemplate.execute(new TransactionCallbackWithoutResult() {
+
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                final TableRowEntity entity = entityManager.find(TableRowEntity.class, name);
+                Assert.assertNull(entity);
+            }
+        });
     }
 
     private class CustomRuntimeException extends RuntimeException {
