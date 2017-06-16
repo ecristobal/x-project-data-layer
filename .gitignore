@@ -8,3 +8,4 @@ pom.xml.releaseBackup
 *.log
 *.lck
 transaction-logs/
+activemq-data/
