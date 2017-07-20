@@ -8,7 +8,4 @@
     </parent>
     <artifactId>database</artifactId>
     <packaging>pom</packaging>
-    <modules>
-        <module>database-insert</module>
-    </modules>
 </project>
